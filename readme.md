@@ -15,7 +15,7 @@
 ## Skills 配置
 这些skills单纯是按我习惯加的，你可以自己去 [skills.sh](https://skills.sh/) 上找你自己需要的
 ```bash
-npx skills add https://github.com/vercel-labs/agent-eval --global  --skill frontend-design
+npx skills add https://github.com/anthropics/skills --global --skill frontend-design
 npx skills add https://github.com/softaworks/agent-toolkit --global --skill mermaid-diagrams
 npx skills add https://github.com/vercel-labs/next-skills --global --skill next-best-practices
 npx skills add https://github.com/laurigates/claude-plugins --global --skill ruff-linting
