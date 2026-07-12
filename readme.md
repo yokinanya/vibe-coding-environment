@@ -23,4 +23,5 @@ npx skills add https://github.com/wshobson/agents --global --skill uv-package-ma
 npx skills add https://github.com/vercel-labs/agent-skills --global --skill vercel-react-best-practices
 npx skills add https://github.com/vercel-labs/agent-eval --global --skill web-design--globaluidelines
 npx skills add https://github.com/wshobson/agents --global --skill tailwind-design-system
+npx skills add https://github.com/ihlamury/design-skills --global --skill notion-ui-skills
 ```
