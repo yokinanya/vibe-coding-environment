@@ -3,7 +3,6 @@
 ### Github Copilot Prompts 配置
 
 - 通用指令模板：[.github/user--globallobal.md](.github/user--globallobal.md)
-- 结束前提问规则模板：[.github/ask-before-end.md](.github/ask-before-end.md) （可选，用于GitHub Copilot 节省用量）
 - 使用方式：将模板内容复制到你自己的 VS Code prompts 指令文件中
 - 用户级路径示例：`~/.copilot/instructions/*.instructions.md`
 
@@ -15,13 +14,9 @@
 ## Skills 配置
 这些skills单纯是按我习惯加的，你可以自己去 [skills.sh](https://skills.sh/) 上找你自己需要的
 ```bash
-npx skills add google-labs-code/stitch-skills --global
-npx skills add https://github.com/softaworks/agent-toolkit --global --skill mermaid-diagrams
-npx skills add https://github.com/vercel-labs/next-skills --global --skill next-best-practices
-npx skills add https://github.com/laurigates/claude-plugins --global --skill ruff-linting
-npx skills add https://github.com/wshobson/agents --global --skill uv-package-manager
-npx skills add https://github.com/vercel-labs/agent-skills --global --skill vercel-react-best-practices
-npx skills add https://github.com/vercel-labs/agent-eval --global --skill web-design--globaluidelines
-npx skills add https://github.com/wshobson/agents --global --skill tailwind-design-system
-npx skills add https://github.com/ihlamury/design-skills --global --skill notion-ui-skills
+npx skills add https://github.com/HSSkyBoy/apk-reverse --global
+npx skills add https://github.com/yhongm/material-design-skill --global
+npx skills add https://github.com/softaworks/agent-toolkit --skill mermaid-diagrams
+npx skills add https://github.com/trailofbits/skills --skill modern-python
+npx skills add https://github.com/vercel-labs/agent-skills --skill web-design-guidelines
 ```

@@ -2,58 +2,78 @@
 description: 全局配置
 applyTo: '**'
 ---
-Always reply in Chinese and strictly follow the rules below.
+## Language
 
-## Problem Solving and Communication
-- Honesty is the top priority. Do not guess or pretend completion when uncertain.
-- Proactively clarify unclear requirements or ask for missing information.
-- When facing technical challenges, prioritize solving them instead of downgrading the solution.
-- Do not write end-of-conversation summaries or reports; only state completed tasks.
-- For detailed explanations, update the `README` in the corresponding directory.
+Default to Chinese in user-facing replies unless the user explicitly requests another language.
 
-## Code Quality and Maintenance
-- During cleanup or refactoring, prioritize technical debt and infrastructure improvements.
-- Focus on code quality, system stability, and consistency with design documents.
-- After code updates, update related documentation promptly.
+## Response Style
 
-## Code Writing Specifications
-- Start from overall architecture and avoid new technical debt (e.g., temp files, hard-coded values, unclear module responsibilities).
-- In imperfect modules, do not add fallback logic that hides errors.
-- Write effective tests.
-- If an issue cannot be solved, record it truthfully in documentation.
-- Maintain critical thinking; proactively raise better implementation options when found.
+Do not propose follow-up tasks or enhancement at the end of your final answer.
 
-## File Handling Specifications
-- Place all new files in appropriate directory structures; do not scatter files in the project root.
-- Keep each single file under 300 lines.
-- If a file requires extensive changes, rewrite and optimize it holistically.
+## Debug-First Policy (No Silent Fallbacks)
 
-## Skill Usage Rules
-- Personal skills are stored in `~/.agents/skills`.
-- Before starting any task, scan available skills.
-- If a skill matches the task, read its `SKILL.md` and follow it.
-- Explicitly announce which skill is being used.
+- Do **not** introduce new boundary rules / guardrails / blockers / caps (e.g. max-turns), fallback behaviors, or silent degradation **just to make it run**.
+- Do **not** add mock/simulation fake success paths (e.g. returning `(mock) ok`, templated outputs that bypass real execution, or swallowing errors).
+- Do **not** write defensive or fallback code; it does not solve the root problem and only increases debugging cost.
+- Prefer **full exposure**: let failures surface clearly (explicit errors, exceptions, logs, failing tests) so bugs are visible and can be fixed at the root cause.
+- If a boundary rule or fallback is truly necessary (security/safety/privacy, or the user explicitly requests it), it must be:
+  - explicit (never silent),
+  - documented,
+  - easy to disable,
+  - and agreed by the user beforehand.
 
-## Python Notes
+## Engineering Quality Baseline
 
-For Python-related tasks:
+- Follow SOLID, DRY, separation of concerns, and YAGNI.
+- Use clear naming and pragmatic abstractions; add concise comments only for critical or non-obvious logic.
+- Remove dead code and obsolete compatibility paths when changing behavior, unless compatibility is explicitly required by the user.
+- Consider time/space complexity and optimize heavy IO or memory usage when relevant.
+- Handle edge cases explicitly; do not hide failures.
 
-* Prefer the `uv` skill for dependency and environment management.
-* Prefer the `ruff` skill for linting and formatting.
+## Code Metrics (Hard Limits)
 
-use skills first, not direct CLI calls, if you really need to call CLI, follow these rules:
+- **Function length**: 50 lines (excluding blanks). Exceeded  extract helper immediately.
+- **File size**: 350 lines. Exceeded  split by responsibility.
+- **Nesting depth**: 3 levels. Use early returns / guard clauses to flatten.
+- **Parameters**: 3 positional. More  use a config/options object.
+- **Cyclomatic complexity**: 10 per function. More  decompose branching logic.
+- **No magic numbers**: extract to named constants (`MAX_RETRIES = 3`, not bare `3`).
 
-* use `uv run -m <module>` , not use `uv run python -m <module>`
-* use `uv run <script>.py` , not use `uv run python <script>.py`
-* ruff cli is installed as `ruff` in PATH, not `uv run ruff` or `python -m ruff`, so just call `ruff <args>` directly.
+## Decoupling & Immutability
 
-examples:
-```bash
-uv run -m pytest tests/test_example.py
-uv run my_script.py
-ruff check src/
-ruff format .
-```
+- **Dependency injection**: business logic never `new`s or hard-imports concrete implementations; inject via parameters or interfaces.
+- **Immutable-first**: prefer `readonly`, `frozen=True`, `const`, immutable data structures. Never mutate function parameters or global state; return new values.
+
+## Security Baseline
+
+- Never hardcode secrets, API keys, or credentials in source code; use environment variables or secret managers.
+- Use parameterized queries for all database access; never concatenate user input into SQL/commands.
+- Validate and sanitize all external input (user input, API responses, file content) at system boundaries.
+- **Conversation keys  code leaks**: When the user shares an API key in conversation (e.g. configuring a provider, debugging a connection), this is normal workflow  do NOT emit "secret leaked" warnings. Only alert when a key is written into a source code file. Frontend display is already masked; no need to remind repeatedly.
+
+## Git Commit Signing (GPG)
+
+- If the repository or global Git config has GPG signing enabled (`commit.gpgsign = true` or `user.signingKey` is set), **never** bypass it with `--no-gpg-sign`, `--no-verify`, or by temporarily disabling the config.
+- If `git commit` fails because the GPG agent is waiting for a YubiKey touch (timeout / `gpg: signing failed: No pinentry` / `gpg: signing failed: Inappropriate ioctl for device`):
+  1. **Prompt the user** to touch their YubiKey or unlock the smart card.
+  2. After the user signals readiness, retry the commit **with the same signing config** — do not strip the signature flag.
+  3. If the user explicitly decides to skip signing for this commit, they must make that choice themselves; the agent must not make it silently.
+
+## Testing and Validation
+
+- Keep code testable and verify with automated checks whenever feasible.
+- When running backend unit tests, enforce a hard timeout of 60 seconds to avoid stuck tasks.
+- Prefer static checks, formatting, and reproducible verification over ad-hoc manual confidence.
+
+## Skills
+
+Skills are stored in `~/.codex/skills/` (personal) and optionally `.codex/skills/` (project-shared).
+
+Before starting a task:
+
+- Scan available skills.
+- If a skill matches, read its `SKILL.md` and follow it.
+- Announce which skill(s) are being used.
 
 ### Ruff Defaults
 
@@ -68,6 +88,3 @@ Rule groups:
 * **I** — import sorting
 * **C4** — flake8-comprehensions
 * **UP** — pyupgrade
-
-## Special Attention
-- Always remain sincere.

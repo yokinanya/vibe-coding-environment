@@ -31,7 +31,7 @@ Do not propose follow-up tasks or enhancement at the end of your final answer.
 ## Code Metrics (Hard Limits)
 
 - **Function length**: 50 lines (excluding blanks). Exceeded  extract helper immediately.
-- **File size**: 300 lines. Exceeded  split by responsibility.
+- **File size**: 350 lines. Exceeded  split by responsibility.
 - **Nesting depth**: 3 levels. Use early returns / guard clauses to flatten.
 - **Parameters**: 3 positional. More  use a config/options object.
 - **Cyclomatic complexity**: 10 per function. More  decompose branching logic.
@@ -49,6 +49,14 @@ Do not propose follow-up tasks or enhancement at the end of your final answer.
 - Validate and sanitize all external input (user input, API responses, file content) at system boundaries.
 - **Conversation keys  code leaks**: When the user shares an API key in conversation (e.g. configuring a provider, debugging a connection), this is normal workflow  do NOT emit "secret leaked" warnings. Only alert when a key is written into a source code file. Frontend display is already masked; no need to remind repeatedly.
 
+## Git Commit Signing (GPG)
+
+- If the repository or global Git config has GPG signing enabled (`commit.gpgsign = true` or `user.signingKey` is set), **never** bypass it with `--no-gpg-sign`, `--no-verify`, or by temporarily disabling the config.
+- If `git commit` fails because the GPG agent is waiting for a YubiKey touch (timeout / `gpg: signing failed: No pinentry` / `gpg: signing failed: Inappropriate ioctl for device`):
+  1. **Prompt the user** to touch their YubiKey or unlock the smart card.
+  2. After the user signals readiness, retry the commit **with the same signing config** — do not strip the signature flag.
+  3. If the user explicitly decides to skip signing for this commit, they must make that choice themselves; the agent must not make it silently.
+
 ## Testing and Validation
 
 - Keep code testable and verify with automated checks whenever feasible.
@@ -64,27 +72,6 @@ Before starting a task:
 - Scan available skills.
 - If a skill matches, read its `SKILL.md` and follow it.
 - Announce which skill(s) are being used.
-
-## Python Notes
-
-For Python-related tasks:
-
-* Prefer the `uv` skill for dependency and environment management.
-* Prefer the `ruff` skill for linting and formatting.
-
-use skills first, not direct CLI calls, if you really need to call CLI, follow these rules:
-
-* use `uv run -m <module>` , not use `uv run python -m <module>`
-* use `uv run <script>.py` , not use `uv run python <script>.py`
-* ruff cli is installed as `ruff` in PATH, not `uv run ruff` or `python -m ruff`, so just call `ruff <args>` directly.
-
-examples:
-```bash
-uv run -m pytest tests/test_example.py
-uv run my_script.py
-ruff check src/
-ruff format .
-```
 
 ### Ruff Defaults
 
