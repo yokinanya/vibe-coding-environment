@@ -16,7 +16,18 @@
 ```bash
 npx skills add https://github.com/HSSkyBoy/apk-reverse --global
 npx skills add https://github.com/yhongm/material-design-skill --global
-npx skills add https://github.com/softaworks/agent-toolkit --skill mermaid-diagrams
-npx skills add https://github.com/trailofbits/skills --skill modern-python
-npx skills add https://github.com/vercel-labs/agent-skills --skill web-design-guidelines
+npx skills add https://github.com/softaworks/agent-toolkit --global --skill mermaid-diagrams
+npx skills add https://github.com/trailofbits/skills --global --skill modern-python
+
+# Web 设计
+npx skills add https://github.com/vercel-labs/agent-skills --global --skill web-design-guidelines
+# Next.js
+npx skills add vercel/next.js --global --skill next-cache-components-optimizer
+npx skills add vercel/next.js --global --skill next-dev-loop
+# React / Next.js 性能优化
+npx skills add vercel-labs/agent-skills --global --skill react-best-practices
+# shadcn/ui
+npx skills add shadcn/ui --global --skill shadcn
+# 动效设计
+npx skills add mblode/agent-skills --global --skill ui-animation
 ```
